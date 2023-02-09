@@ -8,11 +8,11 @@ use convergence::connection::Connection;
 use poc::POCEngine;
 
 async fn start_server() {
-    let duck_conn = Connection::open_in_memory().unwrap();
+    let duck_conn = Arc::new(Connection::open_in_memory().unwrap());
 
     let port = server::run_background(
         BindOptions::new().with_port(0),
-        Arc::new(|| Box::pin(async { POCEngine { duck_conn } })),
+        Arc::new(|| Box::pin(async { POCEngine { duck_conn: duck_conn.clone() } })),
     )
         .await
         .unwrap();

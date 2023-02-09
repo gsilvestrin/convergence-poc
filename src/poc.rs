@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use async_trait::async_trait;
 use duckdb::Connection;
 use convergence::engine::{Engine, Portal};
@@ -18,7 +19,7 @@ impl Portal for POCPortal {
 }
 
 pub struct POCEngine {
-    pub duck_conn: Connection
+    pub duck_conn: Arc<Connection>
 }
 
 #[async_trait]

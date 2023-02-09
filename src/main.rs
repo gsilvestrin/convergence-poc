@@ -12,9 +12,10 @@ async fn start_server() {
     let manager = DuckdbConnectionManager::memory().unwrap();
     let pool = r2d2::Pool::new(manager).unwrap();
 
+
     let port = server::run_background(
         BindOptions::new().with_port(0),
-        Arc::new(|| Box::pin(async { POCEngine { pool } })),
+        Arc::new(|| Box::pin(async { POCEngine { pool: pool.clone() } })),
     )
         .await
         .unwrap();

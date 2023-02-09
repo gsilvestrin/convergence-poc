@@ -6,13 +6,15 @@ use std::sync::Arc;
 use std::thread::sleep_ms;
 use convergence::connection::Connection;
 use poc::POCEngine;
+use duckdb::{DuckdbConnectionManager, params};
 
 async fn start_server() {
-    let duck_conn = Arc::new(Connection::open_in_memory().unwrap());
+    let manager = DuckdbConnectionManager::memory().unwrap();
+    let pool = r2d2::Pool::new(manager).unwrap();
 
     let port = server::run_background(
         BindOptions::new().with_port(0),
-        Arc::new(|| Box::pin(async { POCEngine { duck_conn: duck_conn.clone() } })),
+        Arc::new(|| Box::pin(async { POCEngine { pool } })),
     )
         .await
         .unwrap();

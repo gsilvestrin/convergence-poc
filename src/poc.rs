@@ -1,9 +1,11 @@
+use std::pin::Pin;
 use std::sync::Arc;
 use async_trait::async_trait;
-use duckdb::Connection;
+use duckdb::{Connection, DuckdbConnectionManager};
 use convergence::engine::{Engine, Portal};
 use convergence::protocol::{DataTypeOid, ErrorResponse, FieldDescription, SqlState};
 use convergence::protocol_ext::DataRowBatch;
+use r2d2::Pool;
 use sqlparser::ast::{Expr, SelectItem, SetExpr, Statement};
 
 pub struct POCPortal {
@@ -19,7 +21,9 @@ impl Portal for POCPortal {
 }
 
 pub struct POCEngine {
-    pub duck_conn: Arc<Connection>
+    pub pool: Pool<DuckdbConnectionManager>
+    // pub duckdb: DuckdbConnectionManager
+    // pub duck_conn: Arc<Connection>
 }
 
 #[async_trait]
